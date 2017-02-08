@@ -21,9 +21,9 @@ import com.example.iot_datahub_sdk_demo_android.R;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
-	public static final String serverURL = "ssl://try.iotdatahub.net:8883";
-	public static final String instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";
-	public static final String instanceKey = "238f173d6cc0608a";
+	public static final String serverURL = "ssl://try.iotdatahub.net:8883";// 测试服务器地址，在正式使用时请联系大数点客服获取私有云服务器地址
+	public static final String instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";// 测试instanceId，在正式使用时请联系大数点客服获取instanceId
+	public static final String instanceKey = "238f173d6cc0608a";// 测试instanceKey，在正式使用时请联系大数点客服获取instanceKey
 	private DataHubClient client = null;
 	private EditText et_topic;
 	private EditText et_content;
@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		// 断开服务器的连接
 		try {
 			if (client != null) {
 				client.disconnect();
@@ -60,6 +61,10 @@ public class MainActivity extends Activity {
 		listView.setAdapter(adapter);
 	}
 
+	/**
+	 * 订阅一个topic
+	 * @param v
+	 */
 	public void subcrible(View v) {
 		String topicName = et_topic.getText().toString();
 		if (topicName == null || topicName.trim().length() == 0) {
@@ -94,6 +99,10 @@ public class MainActivity extends Activity {
 		}.execute(topic);
 	}
 
+	/**
+	 * 取消订阅一个topic
+	 * @param v
+	 */
 	public void unsubcrible(View v) {
 		String topicName = et_topic.getText().toString();
 		if (topicName == null || topicName.trim().length() == 0) {
@@ -128,6 +137,10 @@ public class MainActivity extends Activity {
 		}.execute(topic);
 	}
 
+	/**
+	 * 发送消息
+	 * @param v
+	 */
 	public void publish(View v) {
 		String content = et_content.getText().toString();
 		String name = et_topic_publish.getText().toString();
@@ -196,6 +209,9 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	/**
+	 * 连接服务器
+	 */
 	private void connect() {
 		new AsyncTask<Void, Void, Boolean>() {
 
