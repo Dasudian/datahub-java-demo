@@ -2,6 +2,7 @@ package com.dasudian.iot_datahub_sdk_demo_android;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -20,8 +21,9 @@ import com.example.iot_datahub_sdk_demo_android.R;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
-	public static final String appId = "";
-	public static final String appSec = "";
+	public static final String serverURL = "ssl://try.iotdatahub.net:8883";
+	public static final String instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";
+	public static final String instanceKey = "238f173d6cc0608a";
 	private DataHubClient client = null;
 	private EditText et_topic;
 	private EditText et_content;
@@ -29,7 +31,6 @@ public class MainActivity extends Activity {
 	private ListView listView;
 	private List<MyMessage> messages = new ArrayList<MyMessage>();
 	private MessageAdapter adapter;
-	private int connetCount = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class MainActivity extends Activity {
 			Util.showToast(this, "内容不能为空");
 			return;
 		}
-		Topic topic = new Topic("/" + appId + "/" + topicName, 1);
+		Topic topic = new Topic(topicName, 1);
 		new AsyncTask<Topic, Void, Boolean>() {
 
 			@Override
@@ -130,8 +131,7 @@ public class MainActivity extends Activity {
 	public void publish(View v) {
 		String content = et_content.getText().toString();
 		String name = et_topic_publish.getText().toString();
-		if (content == null || content.trim().length() == 0 || name == null
-				|| name.trim().length() == 0) {
+		if (content == null || content.trim().length() == 0 || name == null || name.trim().length() == 0) {
 			Util.showToast(this, "内容不能为空");
 			return;
 		}
@@ -201,9 +201,11 @@ public class MainActivity extends Activity {
 
 			@Override
 			protected Boolean doInBackground(Void... params) {
-				client = new DataHubClient("u1", "c1", appId, appSec,
-						new MyCallback(), null);
 				try {
+					String userName = UUID.randomUUID().toString();
+					String clientId = userName;
+					client = new DataHubClient.Builder(instanceId, instanceKey, userName, clientId).setCallback(
+							new MyCallback()).setServerURI(serverURL).setIgnoreCertificate(true).build();
 					client.connect();
 					return true;
 				} catch (ServiceException e) {
@@ -221,10 +223,6 @@ public class MainActivity extends Activity {
 				} else {
 					Util.showToast(MainActivity.this, "链接服务器失败");
 					Log.e(TAG, "链接服务器失败");
-					connetCount++;
-					if (connetCount < 3) {
-						connect();
-					}
 				}
 			}
 		}.execute();
