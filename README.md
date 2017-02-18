@@ -2,7 +2,7 @@
 
 Example Android application using the IoT DataHub Java SDK
 
-Please put the `iot-datahub-sdk-java-1.0.0.jar` into the `libs/` folder.
+Please put the `iot-datahub-sdk-java-x.x.x.jar` into the `libs/` folder.
 
 ## 目录结构说明
 

@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:onClick="unsubcrible"
             android:text="取消订阅" />
+        
     </LinearLayout>
     
     <LinearLayout
@@ -55,6 +56,12 @@
             android:onClick="publish"
             android:text="发布" />
     </LinearLayout>
+    
+     <Button 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="uploadImage"
+            android:text="上传图片"/>
     
     <ListView 
         android:id="@+id/lv"
