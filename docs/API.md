@@ -131,7 +131,7 @@ public void uploadImage(Topic topic, String imagePath)
 				 throws ServiceException
 Parameters:
 topic - 该图片对应的topic
-imagePath - 图片的路径
+imagePath - 图片的路径，图片大小不能超过10M。
 Throws:
 com.dasudian.iot.sdk.ServiceException - 失败时抛出异常
 ```
