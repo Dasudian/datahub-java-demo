@@ -9,7 +9,7 @@ Please put the `iot-datahub-sdk-java-x.x.x.jar` into the `libs/` folder.
 ### demo目录
 该目录下有使用SDK的各种demo.
 
-[dmeo](./demo/src/com/dasudian/iot_datahub_sdk_demo_android/MainActivity.java)
+[demo](./demo/src/com/dasudian/iot_datahub_sdk_demo_android/MainActivity.java)
 
 ### lib目录
 该目录下有最新的SDK库。
