@@ -1,6 +1,9 @@
 package com.dasudian.iot_datahub_sdk_demo_android;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -199,11 +202,29 @@ public class MainActivity extends Activity {
 			@Override
 			protected Boolean doInBackground(String... params) {
 				Topic topic = new Topic("image", 2);
+				InputStream in = null;
+				File file = new File(params[0]);
 				try {
-					client.uploadImage(topic, params[0]);
+					in = new FileInputStream(file);
+					Log.i(TAG, "file length -> " + file.length());
+					byte[] content = new byte[(int) file.length()];
+					// read file content
+					while (in.read(content) != -1) {
+					}
+					// send content
+					Message msg = new Message(topic, content);
+					client.uploadImage(msg);
 					return true;
-				} catch (ServiceException e) {
+				} catch (Exception e) {
+					Log.e(TAG, e.getMessage());
 					return false;
+				} finally {
+					if (in != null) {
+						try {
+							in.close();
+						} catch (IOException e) {
+						}
+					}
 				}
 			}
 

@@ -2,6 +2,7 @@
 
 | Date | Version | Note |
 |---|---|---|
+| 2/28/2017 | 1.1.1 | 修改了上传图片的API |
 | 2/18/2017 | 1.1.0 | 1.添加了上传图片的api 2.修改了发送消息函数和接收消息函数的参数类型 |
 
 # DataHub Java SDK
@@ -116,7 +117,7 @@ com.dasudian.iot.sdk.ServiceException - 失败时抛出异常
 ### 取消订阅
 ```
 public void unsubscribe(Topic topic)
-                 throws com.dasudian.iot.sdk.ServiceException
+                throws com.dasudian.iot.sdk.ServiceException
 取消订阅，该方法是同步方法，会阻塞的等待服务器结果，最多阻塞5秒。
 Parameters:
 topic - 要取消的topic
@@ -127,11 +128,14 @@ com.dasudian.iot.sdk.ServiceException - 失败时抛出异常
 ### 上传图片
 
 ```
-public void uploadImage(Topic topic, String imagePath) 
-				 throws ServiceException
+public Message uploadImage(Message msg)
+				throws com.dasudian.iot.sdk.ServiceException
+上传图片。该方法会阻塞的等待消息发送完成，或则超时返回。超时时间有Message的timeout字段指定。
+timeout = 0：表示一直等待；timeout = someValue：表示最多等待someValue毫秒
 Parameters:
-topic - 该图片对应的topic
-imagePath - 图片的路径，图片大小不能超过10M。
+msg - 要发送的图片的消息内容，消息内容不能大于10M。
+Returns:
+成功时返回发送的消息
 Throws:
 com.dasudian.iot.sdk.ServiceException - 失败时抛出异常
 ```
