@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -20,12 +23,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.dasudian.iot.android.ConnectionReceiver;
 import com.dasudian.iot.sdk.ActionCallback;
 import com.dasudian.iot.sdk.DataHubClient;
 import com.dasudian.iot.sdk.Message;
 import com.dasudian.iot.sdk.ServiceException;
 import com.dasudian.iot.sdk.Topic;
-import com.example.iot_datahub_sdk_demo_android.R;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
@@ -40,7 +43,12 @@ public class MainActivity extends Activity {
 	private ListView listView;
 	private List<MyMessage> messages = new ArrayList<MyMessage>();
 	private MessageAdapter adapter;
+	public static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
+	static {
+		DF.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,7 +59,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		// 断开服务器的连接
+		// APP退出时断开连接
 		try {
 			if (client != null) {
 				client.disconnect();
@@ -59,6 +67,15 @@ public class MainActivity extends Activity {
 		} catch (ServiceException e) {
 		}
 		super.onDestroy();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// 通知SDK APP已经在前台运行了，此时SDK会检测连接是否正常。如果连接丢失，SDK会马上开始重连。
+		if (client != null) {
+			client.onForeground();
+		}
 	}
 
 	private void initView() {
@@ -72,8 +89,6 @@ public class MainActivity extends Activity {
 
 	/**
 	 * 订阅一个topic
-	 * 
-	 * @param v
 	 */
 	public void subcrible(View v) {
 		String topicName = et_topic.getText().toString();
@@ -99,11 +114,9 @@ public class MainActivity extends Activity {
 			protected void onPostExecute(Boolean result) {
 				super.onPostExecute(result);
 				if (result) {
-					Util.showToast(MainActivity.this, "订阅成功");
-					Log.d(TAG, "订阅成功");
+					appendMessage("订阅成功");
 				} else {
-					Util.showToast(MainActivity.this, "订阅失败");
-					Log.e(TAG, "订阅失败");
+					appendMessage("订阅失败");
 				}
 			}
 		}.execute(topic);
@@ -111,8 +124,6 @@ public class MainActivity extends Activity {
 
 	/**
 	 * 取消订阅一个topic
-	 * 
-	 * @param v
 	 */
 	public void unsubcrible(View v) {
 		String topicName = et_topic.getText().toString();
@@ -138,11 +149,9 @@ public class MainActivity extends Activity {
 			protected void onPostExecute(Boolean result) {
 				super.onPostExecute(result);
 				if (result) {
-					Util.showToast(MainActivity.this, "取消订阅成功");
-					Log.d(TAG, "取消订阅成功");
+					appendMessage("取消订阅成功");
 				} else {
-					Util.showToast(MainActivity.this, "取消订阅失败");
-					Log.e(TAG, "取消订阅失败");
+					appendMessage("取消订阅失败");
 				}
 			}
 		}.execute(topic);
@@ -150,8 +159,6 @@ public class MainActivity extends Activity {
 
 	/**
 	 * 选择文件
-	 * 
-	 * @param view
 	 */
 	public void uploadImage(View view) {
 		Intent intent;
@@ -193,8 +200,6 @@ public class MainActivity extends Activity {
 
 	/**
 	 * 上传文件
-	 * 
-	 * @param view
 	 */
 	private void uploadImage(String filePath) {
 		new AsyncTask<String, Void, Boolean>() {
@@ -232,11 +237,9 @@ public class MainActivity extends Activity {
 			protected void onPostExecute(Boolean result) {
 				super.onPostExecute(result);
 				if (result) {
-					Util.showToast(MainActivity.this, "上传图片成功");
-					Log.d(TAG, "上传图片成功");
+					appendMessage("上传图片成功");
 				} else {
-					Util.showToast(MainActivity.this, "上传图片失败");
-					Log.e(TAG, "上传图片失败");
+					appendMessage("上传图片失败");
 				}
 			}
 		}.execute(filePath);
@@ -244,8 +247,6 @@ public class MainActivity extends Activity {
 
 	/**
 	 * 发送消息
-	 * 
-	 * @param v
 	 */
 	public void publish(View v) {
 		String content = et_content.getText().toString();
@@ -256,63 +257,37 @@ public class MainActivity extends Activity {
 		}
 		Topic topic = new Topic(name, 0);
 		Message message = new Message(topic, content.getBytes());
-		new AsyncTask<Message, Void, Boolean>() {
-
-			@Override
-			protected Boolean doInBackground(Message... params) {
-				try {
-					client.publish(params[0]);
-					return true;
-				} catch (ServiceException e) {
-					e.printStackTrace();
-				}
-				return false;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result) {
-				super.onPostExecute(result);
-				if (result) {
-					Util.showToast(MainActivity.this, "发布成功");
-					Log.d(TAG, "发布成功");
-				} else {
-					Util.showToast(MainActivity.this, "发布失败");
-					Log.e(TAG, "发布失败");
-				}
-			}
-		}.execute(message);
+		try {
+			// 调用异步发送方法
+			client.publish(message);
+		} catch (ServiceException e) {
+			appendMessage("发布失败 " + e.getMessage());
+		}
 	}
 
 	class MyCallback implements ActionCallback {
 
 		@Override
 		public void onPublishSuccess(Message m) {
-			Log.d(TAG, "onPublishSuccess");
+			appendMessage("onPublishSuccess");
 		}
 
 		@Override
 		public void onPublishFailure(Message m, Throwable t) {
-			Log.d(TAG, "onPublishFailure");
+			appendMessage("onPublishFailure");
 		}
 
 		@Override
 		public void onMessageReceived(final String topic, final byte[] payload) {
-			Log.d(TAG, "onMessageReceived:topic=" + topic + ",payload=" + new String(payload));
-			runOnUiThread(new Runnable() {
-				public void run() {
-					MyMessage message = new MyMessage(topic, new String(payload));
-					messages.add(message);
-					Util.showToast(MainActivity.this, "onMessageReceived");
-					adapter.notifyDataSetChanged();
-				}
-			});
+			appendMessage("onMessageReceived, topic:" + topic + ", content:" + new String(payload));	
 		}
 
 		@Override
 		public void connectionLost(Throwable t) {
-			System.out.println("connectionLost");
+			appendMessage("connectionLost");
 		}
 	}
+	
 
 	/**
 	 * 连接服务器
@@ -326,7 +301,9 @@ public class MainActivity extends Activity {
 					String userName = UUID.randomUUID().toString();
 					String clientId = userName;
 					client = new DataHubClient.Builder(instanceId, instanceKey, userName, clientId)
-							.setCallback(new MyCallback()).setServerURI(serverURL).setIgnoreCertificate(true).build();
+							.setCallback(new MyCallback()).setAutomaticReconnect(true).setServerURI(serverURL)
+							.setIgnoreCertificate(true).build();
+					ConnectionReceiver.setDataHubClient(client);
 					client.connect();
 					return true;
 				} catch (ServiceException e) {
@@ -339,13 +316,24 @@ public class MainActivity extends Activity {
 			protected void onPostExecute(Boolean result) {
 				super.onPostExecute(result);
 				if (result) {
-					Util.showToast(MainActivity.this, "链接服务器成功");
-					Log.d(TAG, "链接服务器成功");
+					appendMessage("链接服务器成功");
 				} else {
-					Util.showToast(MainActivity.this, "链接服务器失败");
-					Log.e(TAG, "链接服务器失败");
+					appendMessage("链接服务器失败");
 				}
 			}
 		}.execute();
+	}
+	
+	private void appendMessage(final String content) {
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				MyMessage message = new MyMessage(DF.format(new Date()), content);
+				messages.add(message);
+				adapter.notifyDataSetChanged();
+				Log.d(TAG, content);
+			}
+		});
 	}
 }
