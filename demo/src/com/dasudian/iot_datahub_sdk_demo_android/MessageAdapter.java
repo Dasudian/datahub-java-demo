@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.iot_datahub_sdk_demo_android.R;
 
 public class MessageAdapter extends ArrayAdapter<MyMessage> {
 
