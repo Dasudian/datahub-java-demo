@@ -47,7 +47,7 @@ public class ConnectionReceiver extends BroadcastReceiver {
 	 * @param context
 	 */
 	private static void onNetworkChange() {
-		if (client != null && !client.isConnected()) {
+		if (client != null) {
 			client.onNetworkChange();
 		}
 	}

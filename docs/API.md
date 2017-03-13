@@ -1,150 +1,292 @@
-# 版本信息
+[TOC]
+
+# Dasudian IoT DataHub Java SDK
+
+## 版本信息
 
 | Date | Version | Note |
 |---|---|---|
+| 3/13/2017 | 2.0.0 | 客户端全面升级，版本跟新为2.0.0 |
 | 2/28/2017 | 1.1.1 | 修改了上传图片的API |
 | 2/18/2017 | 1.1.0 | 1.添加了上传图片的api 2.修改了发送消息函数和接收消息函数的参数类型 |
 
-# DataHub Java SDK
+---
 
-## Class DataHubClient
+## 创建
 
-### 初始化
-
-通过DataHubClient的Builder获取DataHubClient实例。
+通过DataHubClient.Builder创建DataHubClient实例。
 
 ```
-public DataHubClient.Builder(String instanceId, String instanceKey, String userName, 
-                    String clientId) throws ServiceException 
-Parameters:
-instanceId - 用于大数点验证用户，保证客户端与服务器间的安全通信。demo中的instanceId仅可以用于测试大数点IoT DataHub功能使用，
-如果您想正式使用大数点IoT服务，请联系大数点客服获取私有的instanceId。
+public static class DataHubClient.Builder {
+	...
 
-instanceKey - 用于大数点验证用户，保证客户端与服务器间的安全通信。demo中的instanceKey仅可以用于测试大数点IoT DataHub功能使用，
-如果您想正式使用大数点IoT服务，请联系大数点客服获取私有的instanceKey。
+	/**
+	 * 通过该Builder构建DataHubClient实例
+	 * 
+	 * @param instanceId
+	 *            用于大数点验证用户，保证客户端与服务器间的安全通信。 demo中的instanceId仅可以用于测试大数点IoT
+	 *            DataHub功能使用， 如果您想正式使用大数点IoT服务，请联系大数点客服获取私有的instanceId
+	 * @param instanceKey
+	 *            用于大数点验证用户，保证客户端与服务器间的安全通信。 demo中的instanceKey仅可以用于测试大数点IoT
+	 *            DataHub功能使用， 如果您想正式使用大数点IoT服务，请联系大数点客服获取私有的instanceKey
+	 * @param clientName
+	 *            客户端名字，可以填写任意的utf-8字符。
+	 *            如果你有第三账号系统，并想将自己的账号系统与大数点服务器同步，那么你可以使用第三方账号的名字、昵称。
+	 *            如果没有自己的账号系统，或者对该客户端名字不关心，可以使用随机的名字，但是不能填null。
+	 * @param clientId
+	 *            客户端id，用于服务器唯一标记一个客户端，服务器通过该id向客户端推送消息;
+	 *            注意：不同的客户端的id必须不同，如果有两个客户端有相同的id，服务器会关掉其中的一个客户端的连接。
+	 *            可以使用设备的mac地址，或者第三方账号系统的id（比如qq号，微信号）。
+	 *            如果没有自己的账号系统，则可以随机生成一个不会重复的客户端id。
+	 *            或者自己指定客户端的id，只要能保证不同客户端id不同即可。
+	 * @throws ServiceException
+	 *             有参数为null或长度为0时抛出异常
+	 */
+	public Builder(String instanceId, String instanceKey, String clientName, String clientId)
+			throws ServiceException {
+		...
+	}
 
-userName - 如果你有第三账号系统，并想将自己的账号系统与大数点服务器同步，那么你可以使用第三方账号的名字、昵称。
-如果没有自己的账号系统，或者对该客户端名字不关心，可以使用随机的名字，但是不能填null。
+	/**
+	 * 设置回调函数，用于接收消息和监听SDK与服务器的连接状态
+	 * 
+	 * @param callback
+	 *            回调函数
+	 * @return Builder对象
+	 */
+	public Builder setCallback(ActionCallback callback) {
+		...
+	}
 
-clientId - 客户端id，用于服务器唯一标记一个客户端，服务器通过该id向客户端推送消息;
-注意：不同的客户端的id必须不同，如果有两个客户端有相同的id，服务器会关掉其中的一个客户端的连接。
-可以使用设备的mac地址，或者第三方账号系统的id（比如qq号，微信号）。如果没有自己的账号系统，
-则可以随机生成一个不会重复的客户端id。或者自己指定客户端的id，只要能保证不同客户端id不同即可。
+	/**
+	 * 服务器地址，如果不设置，则默认使用大数点公有云测试服务器。
+	 * 
+	 * @param serverURL
+	 *            服务器的地址
+	 * @return Builder对象
+	 */
+	public Builder setServerURL(String serverURL) {
+		...
+	}
 
-可选设置：
-1. Builder setCallback(ActionCallback callback)
-回调函数，用于监听SDK的各种状态，比如SDK连接断开，有新的消息到达，或者获取某条消息的发送结果。
+	/**
+	 * 设置是否打开调试功能，默认为false
+	 * 
+	 * @param debug
+	 *            true:打开调试；false:关闭调试
+	 * @return Builder对象
+	 */
+	public Builder setDebug(boolean debug) {
+		...
+	}
 
-2. Builder setServerURI(String serverURI) 
-服务器地址，如果不设置，则默认使用大数点公有云测试服务器。
-
-3. Builder setCleanSession(boolean cleanSession)
-true:清除会话，在客户端断开连接后，订阅的topic不会在服务器保存。
-false：不清除会话，断开连接后订阅的topic会保留。默认为false
-
-4. Builder setConnectionTimeout(int connectionTimeout)
-连接服务器的超时时间设置，默认是30s。
-
-5. Builder setCommandTimeout(int commandTimeout)
-设置sendRequest,subscribe,unsubscribe超时时间，默认是5秒。
-
-6. Builder setCertificate(InputStream certificate)
-如果使用私有证书，需要设置证书
-
-7. Builder setIgnoreCertificate(boolean value)
-是否忽略证书验证；true：忽略证书验证，false：不忽略证书验证，可以使用私有证书（目前服务器只支持私有证书），或者系统默认的证书
-
-8. DataHubClient build()
-获取到DataHubClient实例
+	/**
+	 * 获取到DataHubClient实例
+	 * 
+	 * @return DataHubClient实例
+	 */
+	public DataHubClient build() {
+		...
+	}
+}
 ```
 
-### 连接服务器
+
+## 订阅
 ```
-public void connect()
-             throws com.dasudian.iot.sdk.ServiceException
-连接服务器，该方法是同步方法，会阻塞主线程。连接成功后，sdk会在连接断开后自动重连。
-现在的自动重连的机制是：在连接断开后，sdk等待1秒后会尝试连接服务器，如果连接失败会等待双倍的时间后再连接服务器，
-直到最后最多等待2分钟后，再次连接服务器。
-Throws:
-com.dasudian.iot.sdk.ServiceException - 连接服务器失败会抛出异常
+/**
+ * 订阅一个主题，该方法会阻塞的等待消息发送完成，或者超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
+ * 
+ * @param topic
+ *            主题名
+ * @param timeout
+ *            超时时间，单位s
+ * @throws ServiceException
+ *             失败时抛出异常
+ */
+public void subscribe(String topic, long timeout) throws ServiceException
 ```
 
-### 获取当前连接状态
+## 取消订阅
 ```
-public boolean isConnected()
-查看客户端连接状态 get the client connect status.
-Returns:
-处于连接状态返回true，连接断开返回false
-```
-
-### 异步发布消息
-```
-public void publish(Message msg)
-             throws com.dasudian.iot.sdk.ServiceException
-非阻塞的发送消息，发送的结果在回调函数中返回。在网络丢失时，sdk会最多cache 10个消息。
-这10个消息在网络连接恢复后会发送给服务器。
-msg - 要发布的消息。
-Throws:
-com.dasudian.iot.sdk.ServiceException - 发送失败时抛出异常
+/**
+ * 取消订阅一个主题，该方法会阻塞的等待消息发送完成，或则超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
+ * 
+ * @param topic
+ *            主题名
+ * @param timeout
+ *            超时时间，单位s
+ * @throws ServiceException
+ *             失败时抛出异常
+ */
+public void unsubscribe(String topic, long timeout) throws ServiceException
 ```
 
-### 同步发布消息
+## 异步发布
 ```
-public Message sendRequest(Message msg)
-                    throws com.dasudian.iot.sdk.ServiceException
-阻塞的发布消息，该方法会阻塞的等待消息发送完成，或则超时返回。超时时间有Message的timeout字段指定。
-timeout = 0：表示一直等待；timeout = someValue：表示最多等待someValue毫秒。
-Parameters:
-msg - 要发送的消息
-Message you want to send.
-Returns:
-成功时返回发送的消息
-Throws:
-com.dasudian.iot.sdk.ServiceException - 发送失败时抛出异常
-```
-
-### 订阅消息
-```
-public void subscribe(Topic topic)
-               throws com.dasudian.iot.sdk.ServiceException
-订阅一个topic，该方法是同步方法，会阻塞的等待服务器结果，最多阻塞5秒。
-Parameters:
-topic - 要订阅的topic
-Throws:
-com.dasudian.iot.sdk.ServiceException - 失败时抛出异常
+/**
+ * 异步发送消息，SDK根据QoS设置来发送消息，无法知道消息发送成功或失败。
+ * 
+ * @param topic
+ *            主题名
+ * @param msg
+ *            消息内容，长度不能超过512k
+ * @param QoS
+ *            服务质量
+ * @throws ServiceException
+ *             失败是抛出异常
+ */
+public void publish(String topic, Message msg, int QoS) throws ServiceException
 ```
 
-### 取消订阅
+## 同步发布
 ```
-public void unsubscribe(Topic topic)
-                throws com.dasudian.iot.sdk.ServiceException
-取消订阅，该方法是同步方法，会阻塞的等待服务器结果，最多阻塞5秒。
-Parameters:
-topic - 要取消的topic
-Throws:
-com.dasudian.iot.sdk.ServiceException - 失败时抛出异常
-```
-
-### 上传图片
-
-```
-public Message uploadImage(Message msg)
-				throws com.dasudian.iot.sdk.ServiceException
-上传图片。该方法会阻塞的等待消息发送完成，或则超时返回。超时时间有Message的timeout字段指定。
-timeout = 0：表示一直等待；timeout = someValue：表示最多等待someValue毫秒
-Parameters:
-msg - 要发送的图片的消息内容，消息内容不能大于10M。
-Returns:
-成功时返回发送的消息
-Throws:
-com.dasudian.iot.sdk.ServiceException - 失败时抛出异常
+/**
+ * 同步发送消息，该方法会阻塞的等待消息发送完成，或者超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
+ * 
+ * @param topic
+ *            主题名
+ * @param msg
+ *            消息内容，长度不能超过512k
+ * @param QoS
+ *            服务质量
+ * @param timeout
+ *            超时时间，单位s
+ * @throws ServiceException
+ *             失败是抛出异常
+ */
+public void sendRequest(String topic, Message msg, int QoS, long timeout) throws ServiceException
 ```
 
-### 与服务器断开连接
+## 上传图片
 ```
-public void disconnect()
-                throws com.dasudian.iot.sdk.ServiceException
-断开与服务器的连接
-Throws:
-com.dasudian.iot.sdk.ServiceException - 失败时抛出异常
+/**
+ * 上传图片。该方法会阻塞的等待消息发送完成，或者超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
+ * 
+ * @param topic
+ *            主题名
+ * @param msg
+ *            图片内容，最大支持10M
+ * @param QoS
+ *            服务质量
+ * @param timeout
+ *            超时时间，单位s
+ * @throws ServiceException
+ *             失败是抛出异常
+ */
+public void uploadImage(String topic, Message msg, int QoS, long timeout) throws ServiceException
+```
+
+## 销毁
+```
+/**
+ * 销毁客户端，并断开与服务器的连接
+ */
+public void destroy()
+```
+
+---
+
+## ServiceException定义
+```
+public class ServiceException extends Exception {
+
+	...	
+	// 通用错误码
+	public static final int ERROR_NONE = 0;// 没有错误
+	public static final int ERROR_ILLEGAL_PARAMETERS = -1;// 非法参数
+	public static final int ERROR_DISCONNECTED = -2;// 没有与服务器连接
+	public static final int ERROR_UNACCEPT_PROTOCOL_VERSION = -3; // 协议版本不支持
+	public static final int ERROR_IDENTIFIER_REJECTED = -4;// 标识符已拒绝
+	public static final int ERROR_SERVER_UNAVAILABLE = -5;// 服务器不可用
+	public static final int ERROR_BAD_USERNAME_OR_PASSWD = -6;// 错误的用户名和密码
+	public static final int ERROR_UNAUTHORIZED = -7;// 未认证
+	public static final int ERROR_AUTHORIZED_SERVER_UNAVAILABLE = -8;// 认证服务器不可用
+	public static final int ERROR_OPERATION_FAILURE = -9;// 操作失败
+	public static final int ERROR_MESSAGE_TOO_BIG = -10;// 消息太大
+	public static final int ERROR_NETWORK_UNREACHABLE = -11;// 网络不可达
+	public static final int ERROR_TIMEOUT = -12;// 超时
+	// Java特有的错误码
+	public static final int ERROR_IO = -300;// IO错误
+
+	...
+
+	/**
+	 * 获取错误码
+	 * @return 错误码
+	 */
+	public int getCode() {
+	}
+}
+```
+
+## Message定义
+```
+public class Message {
+
+	...
+
+	/**
+	 * 构造一个消息
+	 * 
+	 * @param payload
+	 *            消息的内容
+	 */
+	public Message(byte[] payload) {
+		...
+	}
+
+	/**
+	 * 获取消息内容
+	 * @return 消息内容
+	 */
+	public byte[] getPayload() {
+		...
+	}
+
+	/**
+	 * 设置消息内容
+	 * @param payload 消息内容
+	 */
+	public void setPayload(byte[] payload) {
+		...
+	}
+}
+```
+
+## ActionCallback定义
+```
+public abstract class ActionCallback {
+	/**
+	 * 接收到发布的消息
+	 * 
+	 * @param topic
+	 *            发布的topic
+	 * @param payload
+	 *            发布的内容
+	 */
+	public void onMessageReceived(String topic, byte[] payload) {
+	}
+
+	/**
+	 * SDK与服务器的连接状态改变
+	 * 
+	 * @param isConnected
+	 *            true:连接成功；false:连接丢失
+	 */
+	public void onConnectionStatusChanged(boolean isConnected) {
+	}
+}
+```
+
+## QoS说明
+```
+0:最多分发一次；仅仅发送出去，不等待服务器的应答，删除该消息。
+1:至少分发一次；发送给服务器，并等待服务器的应答，收到应答后删除该消息。如果一段时间内客户端没有收到服务器的应答，则再次发送该消息，所以服务器可能收到多条消息。
+2:只分发一次；过程如下：
+	client --> server(客户端向服务器发送消息)
+	client <-- server(服务器向客户端发送pubrel)
+	client --> server(客户端向服务器发送pubrel ack)
+	client <-- server(服务器向客户端发送pubcom)
+	client收到pubcom，删除消息
 ```
