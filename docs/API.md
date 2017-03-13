@@ -1,31 +1,20 @@
 
 # Dasudian IoT DataHub Java SDK
 
-[版本信息](#版本信息)
+1. [版本信息](#version)
+2. [创建](#create)
+3. [订阅](#subscribe)
+4. [取消订阅](#unsubscribe)
+5. [异步发布](#publish)
+6. [同步发布](#sendRequest)
+7. [上传图片](#uploadImage)
+8. [销毁](#destroy)
+9. [ServiceException定义](#ServiceException)
+10. [Message定义](#Message)
+11. [ActionCallback定义](#ActionCallback)
+12. [QoS说明](#QoS)
 
-[创建](#创建)
-
-[订阅](#订阅)
-
-[取消订阅](#取消订阅)
-
-[异步发布](#异步发布)
-
-[同步发布](#同步发布)
-
-[上传图片](#上传图片)
-
-[销毁](#销毁)
-
-[ServiceException定义](#ServiceException定义)
-
-[Message定义](#Message定义)
-
-[ActionCallback定义](#ActionCallback定义)
-
-[QoS说明](#QoS说明)
-
-## 版本信息
+## <a name="version>版本信息</a>
 
 | Date | Version | Note |
 |---|---|---|
@@ -33,7 +22,7 @@
 | 2/28/2017 | 1.1.1 | 修改了上传图片的API |
 | 2/18/2017 | 1.1.0 | 1.添加了上传图片的api 2.修改了发送消息函数和接收消息函数的参数类型 |
 
-## 创建
+## <a name="create">创建</a>
 
 通过DataHubClient.Builder创建DataHubClient实例。
 
@@ -113,7 +102,7 @@ public static class DataHubClient.Builder {
 ```
 
 
-## 订阅
+## <a name="subscribe">订阅</a>
 ```
 /**
  * 订阅一个主题，该方法会阻塞的等待消息发送完成，或者超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
@@ -128,7 +117,7 @@ public static class DataHubClient.Builder {
 public void subscribe(String topic, long timeout) throws ServiceException
 ```
 
-## 取消订阅
+## <a name="unsubscribe">取消订阅</a>
 ```
 /**
  * 取消订阅一个主题，该方法会阻塞的等待消息发送完成，或则超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
@@ -143,7 +132,7 @@ public void subscribe(String topic, long timeout) throws ServiceException
 public void unsubscribe(String topic, long timeout) throws ServiceException
 ```
 
-## 异步发布
+## <a name="publish>异步发布</a>
 ```
 /**
  * 异步发送消息，SDK根据QoS设置来发送消息，无法知道消息发送成功或失败。
@@ -160,7 +149,7 @@ public void unsubscribe(String topic, long timeout) throws ServiceException
 public void publish(String topic, Message msg, int QoS) throws ServiceException
 ```
 
-## 同步发布
+## <a name="sendRequest">同步发布</a>
 ```
 /**
  * 同步发送消息，该方法会阻塞的等待消息发送完成，或者超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
@@ -179,7 +168,7 @@ public void publish(String topic, Message msg, int QoS) throws ServiceException
 public void sendRequest(String topic, Message msg, int QoS, long timeout) throws ServiceException
 ```
 
-## 上传图片
+## <a name="uploadImage">上传图片</a>
 ```
 /**
  * 上传图片。该方法会阻塞的等待消息发送完成，或者超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
@@ -198,7 +187,7 @@ public void sendRequest(String topic, Message msg, int QoS, long timeout) throws
 public void uploadImage(String topic, Message msg, int QoS, long timeout) throws ServiceException
 ```
 
-## 销毁
+## <a name="destroy">销毁</a>
 ```
 /**
  * 销毁客户端，并断开与服务器的连接
@@ -206,7 +195,7 @@ public void uploadImage(String topic, Message msg, int QoS, long timeout) throws
 public void destroy()
 ```
 
-## ServiceException定义
+## <a name="ServiceException">ServiceException</a>
 ```
 public class ServiceException extends Exception {
 
@@ -239,7 +228,7 @@ public class ServiceException extends Exception {
 }
 ```
 
-## Message定义
+## <a name="Message">Message</a>
 ```
 public class Message {
 
@@ -273,7 +262,7 @@ public class Message {
 }
 ```
 
-## ActionCallback定义
+## <a name="ActionCallback">ActionCallback</a>
 ```
 public abstract class ActionCallback {
 	/**
@@ -298,7 +287,7 @@ public abstract class ActionCallback {
 }
 ```
 
-## QoS说明
+## <a name="QoS">QoS</a>
 ```
 0:最多分发一次；仅仅发送出去，不等待服务器的应答，删除该消息。
 1:至少分发一次；发送给服务器，并等待服务器的应答，收到应答后删除该消息。如果一段时间内客户端没有收到服务器的应答，则再次发送该消息，所以服务器可能收到多条消息。
