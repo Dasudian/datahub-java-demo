@@ -2,17 +2,28 @@
 # Dasudian IoT DataHub Java SDK
 
 [版本信息](#版本信息)
+
 [创建](#创建)
+
 [订阅](#订阅)
+
 [取消订阅](#取消订阅)
+
 [异步发布](#异步发布)
+
 [同步发布](#同步发布)
+
 [上传图片](#上传图片)
+
 [销毁](#销毁)
+
 [ServiceException定义](#ServiceException定义)
+
 [Message定义](#Message定义)
+
 [ActionCallback定义](#ActionCallback定义)
-[QoS说明](QoS说明)
+
+[QoS说明](#QoS说明)
 
 ## 版本信息
 
@@ -21,8 +32,6 @@
 | 3/13/2017 | 2.0.0 | 客户端全面升级，版本跟新为2.0.0 |
 | 2/28/2017 | 1.1.1 | 修改了上传图片的API |
 | 2/18/2017 | 1.1.0 | 1.添加了上传图片的api 2.修改了发送消息函数和接收消息函数的参数类型 |
-
----
 
 ## 创建
 
@@ -196,8 +205,6 @@ public void uploadImage(String topic, Message msg, int QoS, long timeout) throws
  */
 public void destroy()
 ```
-
----
 
 ## ServiceException定义
 ```
