@@ -7,9 +7,9 @@
 6. [同步发布](#sendRequest)
 7. [上传图片](#uploadImage)
 8. [销毁](#destroy)
-9. [ServiceException定义](#ServiceException)
-10. [Message定义](#Message)
-11. [ActionCallback定义](#ActionCallback)
+9. [ServiceException](#ServiceException)
+10. [Message](#Message)
+11. [ActionCallback](#ActionCallback)
 12. [QoS说明](#QoS)
 
 # Dasudian IoT DataHub Java SDK
