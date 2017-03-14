@@ -14,7 +14,7 @@
 
 # Dasudian IoT DataHub Java SDK
 
-## <a name="version>版本信息</a>
+## <a name="version">版本信息</a>
 
 | Date | Version | Note |
 |---|---|---|
@@ -103,6 +103,7 @@ public static class DataHubClient.Builder {
 
 
 ## <a name="subscribe">订阅</a>
+
 ```
 /**
  * 订阅一个主题，该方法会阻塞的等待消息发送完成，或者超时返回。 timeout = 0，表示一直等待；否则等待timeout秒。
@@ -132,7 +133,7 @@ public void subscribe(String topic, long timeout) throws ServiceException
 public void unsubscribe(String topic, long timeout) throws ServiceException
 ```
 
-## <a name="publish>异步发布</a>
+## <a name="publish">异步发布</a>
 ```
 /**
  * 异步发送消息，SDK根据QoS设置来发送消息，无法知道消息发送成功或失败。
