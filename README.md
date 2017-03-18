@@ -22,6 +22,6 @@ Please put the `dasudian-datahub-sdk.x.x.x.jar` into the `libs/` folder.
 [API文档](./docs/API.md)
 
 ## 编译和运行demo
-Android demo使用eclipse开发，也可以将起导入到Android Studio运行。
+Android demo使用eclipse开发，也可以将其导入到Android Studio运行。
 
 ## Q&A
