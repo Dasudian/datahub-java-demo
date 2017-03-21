@@ -30,8 +30,11 @@ import com.dasudian.iot.sdk.ServiceException;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
-	public static final String instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";// 测试instanceId，在正式使用时请联系大数点客服获取instanceId
-	public static final String instanceKey = "238f173d6cc0608a";// 测试instanceKey，在正式使用时请联系大数点客服获取instanceKey
+	public static final String serverURL = "ssl://gary0755.oicp.net:25765";
+//	public static final String instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";// 测试instanceId，在正式使用时请联系大数点客服获取instanceId
+//	public static final String instanceKey = "238f173d6cc0608a";// 测试instanceKey，在正式使用时请联系大数点客服获取instanceKey
+	public static final String instanceId = "dsd_9IPsIAM3L8URamPFHk_A";
+	public static final String instanceKey = "a3e31e6d183699b5";
 	public static DataHubClient client;
 	public static final int REQUEST_CODE = 2;
 	private EditText et_topic;
@@ -58,7 +61,8 @@ public class MainActivity extends Activity {
 		String clientName = UUID.randomUUID().toString();
 		String clientId = clientName;
 		try {
-			client = new DataHubClient.Builder(instanceId, instanceKey, clientName, clientId).setCallback(
+			client = new DataHubClient.Builder(instanceId, instanceKey, clientName, clientId)
+					.setServerURL(serverURL).setCallback(
 					new MyCallback()).build();
 		} catch (ServiceException e) {
 			e.printStackTrace();
@@ -77,10 +81,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// 通知SDK APP已经在前台运行了，此时SDK会检测连接是否正常。如果连接丢失，SDK会马上开始重连。
-//		if (client != null) {
-//			client.onForeground();
-//		}
 	}
 
 	private void initView() {
