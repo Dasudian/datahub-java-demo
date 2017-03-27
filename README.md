@@ -1,13 +1,13 @@
 # Dasudian IoT DataHub Java SDK demo
 
-Please put the `dasudian-datahub-sdk.x.x.x.jar` into the `libs/` folder.
+请将lib目录下的`dasudian-datahub-sdk.x.x.x.jar` 放到您项目对应的 `libs/` 目录下。
 
 ## 目录结构说明
 
 ### demo目录
 该目录下有使用SDK的各种demo.
 
-[Android demo](./demo/src/com/dasudian/iot_datahub_sdk_demo_android/MainActivity.java)
+[Android demo](./demo/app/src/main/java/com/dasudian/iot_datahub_sdk_demo_android/MainActivity.java)
 
 [java demo1](./demo-java/Main.java)
 
@@ -22,6 +22,6 @@ Please put the `dasudian-datahub-sdk.x.x.x.jar` into the `libs/` folder.
 [API文档](./docs/API.md)
 
 ## 编译和运行demo
-Android demo使用eclipse开发，也可以将其导入到Android Studio运行。
+使用Android Studio打开项目编译运行即可。
 
 ## Q&A
