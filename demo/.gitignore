@@ -1,0 +1,8 @@
+# Built application files
+build
+bin
+local.properties
+.gradle
+.signing
+.idea
+*.iml

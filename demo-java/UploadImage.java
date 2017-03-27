@@ -1,3 +1,7 @@
+/*
+ * Licensed Materials - Property of Dasudian 
+ * Copyright Dasudian Technology Co., Ltd. 2016-2017 
+ */
 package com.dasudian.iot.demo;
 
 import java.io.File;
@@ -12,12 +16,11 @@ import java.util.logging.Logger;
 import com.dasudian.iot.sdk.ActionCallback;
 import com.dasudian.iot.sdk.DataHubClient;
 import com.dasudian.iot.sdk.Message;
-import com.dasudian.iot.sdk.Topic;
 
 public class UploadImage {
 	private static final Logger LOGGER = Logger.getLogger(UploadImage.class.getSimpleName());
 	
-	private static class MyCallback implements ActionCallback {
+	private static class MyCallback extends ActionCallback {
 
 		@Override
 		public void onMessageReceived(String topic, byte[] payload) {
@@ -44,36 +47,19 @@ public class UploadImage {
 				}
 			}
 		}
-
-		@Override
-		public void onPublishSuccess(Message m) {
-			LOGGER.info("onPublishSucceess, topic= " + m.getTopic().getName() + ",content= " + m.getPayload());
-		}
-
-		@Override
-		public void onPublishFailure(Message m, Throwable t) {
-			LOGGER.info("onPublishFailure");
-		}
-
-		@Override
-		public void connectionLost(Throwable t) {
-			LOGGER.info("connectionLost");
-		}
 	}
 	
-	private static Message getMessage(Topic topic, String imagePath) {
+	private static Message getMessage(String imagePath) {
 		File file = new File(imagePath);
 		InputStream in = null;
 		try {
 			in = new FileInputStream(file);
-			int byteread = 0;
-			LOGGER.info("file length -> " + file.length());
+			System.out.println("file length -> " + file.length());
 			byte[] content = new byte[(int) file.length()];
 			// read file content
-			while ((byteread = in.read(content)) != -1) {
-			}
+			while (in.read(content) != -1);
 			// send content
-			Message msg = new Message(topic, content);
+			Message msg = new Message(content);
 			return msg;
 		} catch (Exception e) {
 			
@@ -96,23 +82,17 @@ public class UploadImage {
 		String clientId = userName;
 		
 		DataHubClient client = new DataHubClient.Builder(instanceId, instanceKey, userName, clientId).setCallback(
-				new MyCallback()).setCleanSession(true).setServerURI(serverURL).setIgnoreCertificate(true).build();
-		client.connect();
-		Topic topic = new Topic("image", 2);
-		client.subscribe(topic);
-		
-//		client.uploadImage(getMessage(topic, UploadImage.class.getClassLoader().getResource("1.jpg").getFile()));
-//		client.uploadImage(getMessage(topic, UploadImage.class.getClassLoader().getResource("2.jpg").getFile()));
-//		client.uploadImage(getMessage(topic, UploadImage.class.getClassLoader().getResource("3.jpg").getFile()));
-//		client.uploadImage(getMessage(topic, UploadImage.class.getClassLoader().getResource("4.gif").getFile()));
-//		client.uploadImage(getMessage(topic, UploadImage.class.getClassLoader().getResource("5.png").getFile()));
-		LOGGER.info("upload image success");
+				new MyCallback()).setServerURL(serverURL).build();
+		String topic = "image";
+		client.subscribe(topic, 10);
+		client.uploadImage(topic, getMessage(UploadImage.class.getClassLoader().getResource("icon.png").getFile()), 2, 30);
+		System.out.println("upload image success");
 		int i = 200000;
 		while (i-- > 0) {
-			LOGGER.info("running....");
+			System.out.println("running....");
 			Thread.sleep(10*1000);
 		}
-		client.disconnect();
+		client.destroy();
 	}
 
 }
