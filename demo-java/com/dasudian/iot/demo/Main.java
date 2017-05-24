@@ -17,7 +17,7 @@ import com.dasudian.iot.sdk.ServiceException;
 
 public class Main {
 	private static final Logger LOGGER = Logger.getLogger(Main.class.getSimpleName());
-		//时间格式
+	//时间格式
 	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
 	static {
@@ -66,9 +66,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		//instance id, 标识客户的唯一ID，请联系大数点商务support@dasudian.com获取
-		String instanceId = "dsd_9FmYSNiqpFmi69Bui0_A";
+		String instanceId = "yourInstanceId";
 		//instance key, 与客户标识相对应的安全密钥，请联系大数点商务support@dasudian.com获取
-		String instanceKey = "238f173d6cc0608a";
+		String instanceKey = "yourInstanceKey";
 		//客户端名字
 		String clientName = UUID.randomUUID().toString();
 		//客户端ID
@@ -81,7 +81,7 @@ public class Main {
 					.setCallback(new MyCallback()).build();
 			//客户端 发送消息的主题
 			String topic = "topic";
-			//打印日志消息，且若订阅成功则不再的订阅，失败则2秒后再次订阅直到订阅成功
+			//打印日志消息，且若订阅成功则不再订阅，失败则2秒后再次订阅直到订阅成功
 			while (sub(topic, client) != true);
 
 			//客户端发送消息(无论消息发送成功或者失败，等待2秒后继续发送)
