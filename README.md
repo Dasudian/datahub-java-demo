@@ -14,9 +14,9 @@
 
 [Android demo](./demo/app/src/main/java/com/dasudian/iot_datahub_sdk_demo_android/MainActivity.java)
 
-[java demo1](./demo-java/Main.java)
+[java demo1](./demo-java/com/dasudian/iot/demo/Main.java)
 
-[java demo2](./demo-java/UploadImage.java)
+[java demo2](./demo-java/com/dasudian/iot/demo/UploadImage.java)
 
 ### lib目录
 该目录下有最新的SDK库。
