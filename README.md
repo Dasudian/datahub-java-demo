@@ -11,7 +11,7 @@
 
 ### demo目录
 
-[demo](./demo-java/com/dasudian/iot/demo/Main.java)
+[demo](./demo/com/dasudian/iot/demo/Main.java)
 
 
 ### lib目录
