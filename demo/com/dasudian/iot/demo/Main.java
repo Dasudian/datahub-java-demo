@@ -47,8 +47,8 @@ public class Main {
 	private static boolean sub(String topic, DataHubClient client) {
 		//客户发送订阅消息主题topic
 		try {
-			//客户订阅主题  参数为主题topic ,设置超时时间为10秒
-			client.subscribe(topic, 10);
+			//客户订阅主题  参数为主题topic , qos设置为1, 设置超时时间为10秒
+			client.subscribe(topic, 1, 10);
 			LOGGER.info("subscribe success");
 			return true;
 		} catch (ServiceException e) {
@@ -69,6 +69,8 @@ public class Main {
 		String instanceId = "yourInstanceId";
 		//instance key, 与客户标识相对应的安全密钥，请联系大数点商务support@dasudian.com获取
 		String instanceKey = "yourInstanceKey";
+		// 大数点IoT DataHub云端地址，请联系大数点商务support@dasudian.com获取
+		String serverURL = "tcp://www.example.com:1883";
 		//客户端名字
 		String clientName = UUID.randomUUID().toString();
 		//客户端ID
@@ -78,7 +80,9 @@ public class Main {
 		try {
 			//建立客户端
 			DataHubClient client = new DataHubClient.Builder(instanceId, instanceKey, clientName, clientId)
-					.setCallback(new MyCallback()).build();
+					.setCallback(new MyCallback())
+					.setServerURL(serverURL)
+					.build();
 			//客户端 发送消息的主题
 			String topic = "topic";
 			//打印日志消息，且若订阅成功则不再订阅，失败则2秒后再次订阅直到订阅成功
