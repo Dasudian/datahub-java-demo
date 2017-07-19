@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+buildscript {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    }
+}
+
+allprojects {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resource'
+        }
+    }
+}
+
+
+dependencies {
+    compile 'junit:junit:4.11'
+    compile files('libs/dasudian-datahub-sdk-2.2.0.jar')
+}
