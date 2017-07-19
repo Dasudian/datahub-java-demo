@@ -7,7 +7,7 @@
 大数点工业大数据服务让设备变得有生命，并让其整个生命周期为你管理，让她的每一次呼吸（产生数据）在大数点云端为你变现！关于如何获得大数点工业大数据分析服务，请联系大数点顾问团队sales@dasudian.com或support@dasudian.com，我们将竭诚为您展示大数点丰富多彩而致力于解决实际问题的数据分析服务。
 
 ## 目录结构说明
-请将lib目录下的`dasudian-datahub-sdk-x.x.x.jar` 放到您项目对应的 `lib/` 目录下。
+请将lib目录下的`dasudian-datahub-sdk-x.x.x.jar` 放到您项目对应的 `libs/` 目录下。
 
 ### demo目录
 
