@@ -31,11 +31,11 @@ JDK版本: openjdk version "1.8.0_131"
 编译:
 
 ```
-javac -classpath lib/dasudian-datahub-sdk-2.2.0.jar demo/com/dasudian/iot/demo/Main.java
+javac -classpath lib/dasudian-datahub-sdk-xxx.jar demo/com/dasudian/iot/demo/Main.java
 ```
 
 运行:
 
 ```
-java -classpath lib/dasudian-datahub-sdk-2.2.0.jar:demo/ com.dasudian.iot.demo.Main
+java -classpath lib/dasudian-datahub-sdk-xxx.jar:demo/ com.dasudian.iot.demo.Main
 ```
