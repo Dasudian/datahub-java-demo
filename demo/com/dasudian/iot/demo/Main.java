@@ -2,6 +2,7 @@
  * Licensed Materials - Property of Dasudian
  * Copyright Dasudian Technology Co., Ltd. 2016-2017
  */
+package com.dasudian.iot.demo;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
