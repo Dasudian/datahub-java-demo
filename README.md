@@ -28,14 +28,26 @@ JDK版本: openjdk version "1.8.0_131"
 
 在本目录下运行下列命令
 
-编译:
+linux编译:
 
 ```
-javac -classpath lib/dasudian-datahub-sdk-2.2.0.jar demo/com/dasudian/iot/demo/Main.java
+javac -classpath lib/dasudian-datahub-sdk-xxx.jar demo/com/dasudian/iot/demo/Main.java
 ```
 
-运行:
+linux运行:
 
 ```
-java -classpath lib/dasudian-datahub-sdk-2.2.0.jar:demo/ com.dasudian.iot.demo.Main
+java -classpath lib/dasudian-datahub-sdk-xxx.jar:demo/ com.dasudian.iot.demo.Main
+```
+
+Windows编译
+
+```
+javac -encoding UTF-8 -classpath lib/dasudian-datahub-sdk-XXX.jar demo/com/dasudian/iot/demo/Main.java
+```
+
+Windows运行
+
+```
+java -classpath lib/dasudian-datahub-sdk-Java.04.00.00.jar;demo/ com.dasudian.iot.demo.Main
 ```
